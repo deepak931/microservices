@@ -12,6 +12,6 @@ import java.util.List;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
   @Query(
-      "select m from Movie m inner join m.theatres as t  inner join t.city as c where m.title " + "like " + "%?1% " + "and c" + ".name=?2 ")
+      "select m from Movie m inner join fetch m.theatres as t  inner join fetch t.city as c where" + " m" + ".isRunning=true and " + "m" + ".title " + "like " + "%?1% " + "and c" + ".name=?2 ")
   List<Movie> findByMovieNameAndCity(String movieName, String city);
 }

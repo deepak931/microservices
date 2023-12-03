@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
@@ -19,12 +19,10 @@ public class Ticket extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
   @GenericGenerator(name = "native")
   private Long ticketId;
-
-  private Long seatId;
-
+  
   private double price;
 
-  private LocalDateTime showDate;
+  private LocalDate showDate;
 
   @OneToOne
   private Shows shows;

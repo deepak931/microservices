@@ -17,5 +17,5 @@ public class UserDto {
 
   private String phoneNo;
 
-  private Set<BookingDto> bookings;
+  private Set<BookingRequestDto> bookings;
 }

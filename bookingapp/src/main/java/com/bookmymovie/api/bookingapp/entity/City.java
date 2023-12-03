@@ -15,12 +15,11 @@ import org.hibernate.annotations.GenericGenerator;
 @NoArgsConstructor
 public class City {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-  @GenericGenerator(name = "native")
-  private Long cityId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native")
+    private Long cityId;
 
-  private String name;
+    private String name;
 
-  private String zipCode;
 }

@@ -7,7 +7,6 @@ import org.hibernate.annotations.GenericGenerator;
 import java.util.Set;
 
 @Entity
-//@Table(name = "partner_onboarding")
 @Getter
 @Setter
 @ToString
@@ -15,22 +14,23 @@ import java.util.Set;
 @NoArgsConstructor
 public class Partner extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-  @GenericGenerator(name = "native")
-  private Long partnerID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native")
+    private Long partnerID;
 
-  private String name;
+    private String name;
 
-  private String email;
+    private String email;
 
-  private String mobileNumber;
+    private String mobileNumber;
 
-  private String address;
+    private String address;
 
-  private String city;
+    @OneToOne
+    private City city;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "partner")
-  private Set<Theatre> theatres;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "partner")
+    private Set<Theatre> theatres;
 
 }

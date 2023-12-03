@@ -1,10 +1,11 @@
 package com.bookmymovie.api.bookingapp.entity;
 
+import com.bookmymovie.api.bookingapp.constants.BookingStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -15,13 +16,19 @@ import java.time.LocalDateTime;
 public class Booking extends BaseEntity {
 
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-  @GenericGenerator(name = "native")
-  private Long bookingId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native")
+    private Long bookingId;
 
-  private LocalDateTime bookingDate;
+    private LocalDate bookingDate;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  private Ticket ticket;
+    @OneToOne
+    private User user;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Ticket ticket;
+
+    private BookingStatus status;
+
 }

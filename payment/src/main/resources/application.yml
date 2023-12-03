@@ -1,0 +1,24 @@
+server:
+  port: 9090
+spring:
+  application:
+    name: "payment"
+  cloud:
+    function:
+      definition: payment
+    stream:
+      bindings:
+        payment-in-0:
+          destination: send-payment-req
+          group: ${spring.application.name}
+        sendProcessBookingReq-out-0:
+          destination: process-booking-req
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    connection-timeout: 10s
+payment:
+  gateway:
+    url: http://localhost:9090/bookmymovie/api/payment

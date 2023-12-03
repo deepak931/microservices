@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Setter
@@ -18,7 +20,7 @@ public class SeatReservation {
   private Long reservationId;
 
   @OneToOne
-  private User use;
+  private User user;
 
   @OneToOne
   private Shows shows;
@@ -26,5 +28,16 @@ public class SeatReservation {
   @OneToOne
   private Movie movie;
 
- 
+  @OneToOne
+  private Theatre theatre;
+
+  @OneToOne
+  private Booking booking;
+
+  private LocalDate date;
+
+  private String seatIds;
+
+
+
 }

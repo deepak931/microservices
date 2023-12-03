@@ -14,30 +14,33 @@ import java.util.Set;
 @NoArgsConstructor
 public class Theatre extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-  @GenericGenerator(name = "native")
-  private Long theatreId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native")
+    private Long theatreId;
 
-  private String theatreName;
+    private String theatreName;
 
-  private String theatreEmail;
+    private String theatreEmail;
 
-  private String contactNumber;
+    private String contactNumber;
 
-  private String address;
+    private String address;
 
-  @OneToOne
-  private City city;
+    @OneToOne
+    private City city;
 
-  @ManyToOne
-  private Partner partner;
+    @ManyToOne
+    private Partner partner;
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private Set<Seat> seats;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Seat> seats;
 
-  @OneToOne
-  private Movie movie;
+    @OneToOne
+    private Movie movie;
+
+
+    private String zipCode;
 
 
 }

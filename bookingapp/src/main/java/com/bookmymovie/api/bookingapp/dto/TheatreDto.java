@@ -11,25 +11,25 @@ import java.util.Set;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TheatreDto {
-  private Long theatreId;
+    private Long theatreId;
 
-  private String theatreName;
+    private String theatreName;
 
-  private String theatreEmail;
+    private String theatreEmail;
 
-  private String contactNumber;
+    private String contactNumber;
 
-  private String address;
+    private String address;
 
-  private String city;
+    private String city;
 
-  private Long partnerId;
+    private Long partnerId;
 
-  private PartnerDto partnerDto;
+    private PartnerDto partnerDto;
 
-  private LocalTime time = LocalTime.now();
+    private LocalTime time = LocalTime.now();
 
-  private LocalDateTime dateTime = LocalDateTime.now();
+    private LocalDateTime dateTime = LocalDateTime.now();
 
-  private Set<SeatDto> seats;
+    private Set<SeatDto> seats;
 }

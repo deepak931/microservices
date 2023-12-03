@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -15,25 +16,29 @@ import java.util.Set;
 @NoArgsConstructor
 public class Movie extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-  @GenericGenerator(name = "native")
-  private Long movieId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native")
+    private Long movieId;
 
-  private String title;
+    private String title;
+    
+    private LocalDateTime releaseDate;
 
-  private int year;
+    private String director;
 
-  private LocalDateTime releaseDate;
+    private String genre;
 
-  private String director;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Shows> shows;
 
-  private String genre;
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private Set<Shows> shows;
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<Theatre> theatres;
 
-  @OneToMany(fetch = FetchType.LAZY)
-  private Set<Theatre> theatres;
+    private boolean isRunning;
 
+    private LocalDate startDate;
+
+    private LocalDate endDate;
 
 }

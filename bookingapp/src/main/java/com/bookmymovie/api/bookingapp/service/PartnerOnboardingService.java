@@ -6,12 +6,12 @@ import java.util.List;
 
 public interface PartnerOnboardingService {
 
-  /**
-   * @param partnerOnboardingDto
-   */
-  void createPartnerOnboarding(PartnerDto partnerOnboardingDto);
+    /**
+     *
+     */
+    Long createPartnerOnboarding(PartnerDto partnerOnboardingDto);
 
-  List<PartnerDto> getAllPartners();
+    List<PartnerDto> getAllPartners();
 
-  PartnerDto getPartnerByClientId(Long clientId);
+    PartnerDto getPartnerByClientId(Long clientId);
 }
