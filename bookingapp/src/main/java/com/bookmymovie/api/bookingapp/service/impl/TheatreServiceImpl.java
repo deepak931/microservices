@@ -57,7 +57,7 @@ public class TheatreServiceImpl implements TheatreService {
     @Override
     public List<TheatreDto> getAllTheatre(boolean isSeats) {
         List<Theatre> theatres = theatreRepository.findAll();
-        return theatres.stream().map(e -> TheatreMapper.mapToTheatreDto(e, new TheatreDto(), isSeats))
+        return theatres.stream().map(e -> TheatreMapper.mapToTheatreDto(e, new TheatreDto(), isSeats, true))
                 .collect(Collectors.toList());
     }
 
@@ -65,6 +65,6 @@ public class TheatreServiceImpl implements TheatreService {
     public TheatreDto getTheatreById(Long id) {
         Theatre theatre = theatreRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundExcption("Theatre", "theatreID", id.toString()));
-        return TheatreMapper.mapToTheatreDto(theatre, new TheatreDto(), true);
+        return TheatreMapper.mapToTheatreDto(theatre, new TheatreDto(), true, true);
     }
 }

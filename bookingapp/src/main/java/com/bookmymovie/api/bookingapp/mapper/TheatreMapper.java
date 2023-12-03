@@ -28,7 +28,8 @@ public class TheatreMapper {
         return theatre;
     }
 
-    public static TheatreDto mapToTheatreDto(Theatre theatre, TheatreDto theatreDto, boolean isSeats) {
+    public static TheatreDto mapToTheatreDto(Theatre theatre, TheatreDto theatreDto, boolean isSeats,
+                                             boolean isPartner) {
         theatreDto.setTheatreId(theatre.getTheatreId());
         theatreDto.setTheatreEmail(theatre.getTheatreEmail());
         theatreDto.setTheatreName(theatre.getTheatreName());
@@ -36,9 +37,11 @@ public class TheatreMapper {
         theatreDto.setCity(theatre.getCity().getName());
         theatreDto.setContactNumber(theatre.getContactNumber());
 
-        PartnerDto partnerDto =
-                PartnerOnboardingMapper.mapToPartnerOnboardingDto(theatre.getPartner(), new PartnerDto());
-        theatreDto.setPartnerDto(partnerDto);
+        if (isPartner) {
+            PartnerDto partnerDto =
+                    PartnerOnboardingMapper.mapToPartnerOnboardingDto(theatre.getPartner(), new PartnerDto());
+            theatreDto.setPartnerDto(partnerDto);
+        }
 
         if (isSeats) {
 

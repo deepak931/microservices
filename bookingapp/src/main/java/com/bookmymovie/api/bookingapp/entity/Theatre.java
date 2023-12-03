@@ -27,7 +27,7 @@ public class Theatre extends BaseEntity {
 
     private String address;
 
-    @OneToOne
+    @ManyToOne
     private City city;
 
     @ManyToOne

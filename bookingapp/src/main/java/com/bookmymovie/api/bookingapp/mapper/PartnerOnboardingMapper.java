@@ -9,9 +9,12 @@ public class PartnerOnboardingMapper {
                                                        PartnerDto partnerOnboardingDto) {
         partnerOnboardingDto.setName(partnerOnboarding.getName());
         partnerOnboardingDto.setEmail(partnerOnboarding.getEmail());
-        partnerOnboardingDto.setClientId(partnerOnboardingDto.getClientId());
         partnerOnboardingDto.setMobileNumber(partnerOnboarding.getMobileNumber());
         partnerOnboardingDto.setAddress(partnerOnboarding.getAddress());
+        partnerOnboardingDto.setPartnerId(partnerOnboarding.getPartnerID());
+        partnerOnboardingDto.setCityId(partnerOnboarding.getCity().getCityId());
+        partnerOnboardingDto.setCityName(partnerOnboarding.getCity().getName());
+
         return partnerOnboardingDto;
     }
 
@@ -19,7 +22,7 @@ public class PartnerOnboardingMapper {
                                                  Partner partnerOnboarding) {
         partnerOnboarding.setName(partnerOnboardingDto.getName());
         partnerOnboarding.setEmail(partnerOnboardingDto.getEmail());
-        partnerOnboarding.setPartnerID(partnerOnboardingDto.getClientId());
+        partnerOnboarding.setPartnerID(partnerOnboardingDto.getPartnerId());
         partnerOnboarding.setMobileNumber(partnerOnboardingDto.getMobileNumber());
         partnerOnboarding.setAddress(partnerOnboardingDto.getAddress());
         return partnerOnboarding;

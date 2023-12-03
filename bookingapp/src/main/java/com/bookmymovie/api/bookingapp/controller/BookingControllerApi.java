@@ -7,6 +7,7 @@ import com.bookmymovie.api.bookingapp.dto.ResponseDto;
 import com.bookmymovie.api.bookingapp.dto.TicketRequestDto;
 import com.bookmymovie.api.bookingapp.entity.SeatReservation;
 import com.bookmymovie.api.bookingapp.service.BookingService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/bookmymovie/api", produces = MediaType.APPLICATION_JSON_VALUE)
+@AllArgsConstructor
 public class BookingControllerApi {
 
 

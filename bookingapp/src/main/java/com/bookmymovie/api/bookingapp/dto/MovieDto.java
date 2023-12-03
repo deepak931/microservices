@@ -1,5 +1,6 @@
 package com.bookmymovie.api.bookingapp.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MovieDto {
 
 
@@ -27,7 +29,7 @@ public class MovieDto {
     @NotEmpty
     private Long theatreId;
 
-    private Set<TheatreDto> theatreDtos;
+    private Set<TheatreDto> theatres;
 
 
 }

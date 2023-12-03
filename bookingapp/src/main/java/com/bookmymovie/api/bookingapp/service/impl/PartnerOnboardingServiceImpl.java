@@ -1,6 +1,7 @@
 package com.bookmymovie.api.bookingapp.service.impl;
 
 import com.bookmymovie.api.bookingapp.dto.PartnerDto;
+import com.bookmymovie.api.bookingapp.entity.City;
 import com.bookmymovie.api.bookingapp.entity.Partner;
 import com.bookmymovie.api.bookingapp.exception.PartnerAlreadyExistsException;
 import com.bookmymovie.api.bookingapp.exception.ResourceNotFoundExcption;
@@ -35,8 +36,10 @@ public class PartnerOnboardingServiceImpl implements PartnerOnboardingService {
             throw new PartnerAlreadyExistsException(
                     "Partner already onboarded with the mobile " + "number " + partnerOnboardingDto.getMobileNumber());
         }
-        cityRepository.findById(partnerOnboardingDto.getCityId()).orElseThrow(() -> new ResourceNotFoundExcption("City",
-                "cityId", partnerOnboardingDto.getCityId().toString()));
+        City city =
+                cityRepository.findById(partnerOnboardingDto.getCityId()).orElseThrow(() -> new ResourceNotFoundExcption("City",
+                        "cityId", partnerOnboardingDto.getCityId().toString()));
+        partnerOnboarding.setCity(city);
         Partner partner = partnerOnboardingRepository.save(partnerOnboarding);
         return partner.getPartnerID();
 

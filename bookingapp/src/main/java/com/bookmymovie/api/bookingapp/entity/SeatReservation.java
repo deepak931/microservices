@@ -14,30 +14,29 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class SeatReservation {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-  @GenericGenerator(name = "native")
-  private Long reservationId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native")
+    private Long reservationId;
 
-  @OneToOne
-  private User user;
+    @OneToOne
+    private User user;
 
-  @OneToOne
-  private Shows shows;
+    @ManyToOne
+    private Shows shows;
 
-  @OneToOne
-  private Movie movie;
+    @ManyToOne
+    private Movie movie;
 
-  @OneToOne
-  private Theatre theatre;
+    @ManyToOne
+    private Theatre theatre;
 
-  @OneToOne
-  private Booking booking;
+    @OneToOne
+    private Booking booking;
 
-  private LocalDate date;
+    private LocalDate date;
 
-  private String seatIds;
-
+    private String seatIds;
 
 
 }

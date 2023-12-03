@@ -2,6 +2,9 @@ package com.bookmymovie.api.bookingapp.dto;
 
 import com.bookmymovie.api.bookingapp.constants.SeatType;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
@@ -9,13 +12,16 @@ import lombok.Data;
 public class SeatDto {
 
 
-  private Long seatId;
+    private Long seatId;
 
-  private String seatNo;
+    @NotEmpty
+    private String seatNo;
 
-  private Integer type;
+    @Max(value = 3)
+    @Min(value = 1)
+    private Integer type;
 
-  private SeatType seatType;
+    private SeatType seatType;
 
 
 }

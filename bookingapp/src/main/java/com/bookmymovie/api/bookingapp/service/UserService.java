@@ -6,11 +6,13 @@ import java.util.List;
 
 public interface UserService {
 
-  /**
-   * @param userDto
-   */
-  void creatUser(UserDto userDto);
+    /**
+     * @param userDto
+     */
+    Long creatUser(UserDto userDto);
 
-  List<UserDto> getAllUsers();
+    List<UserDto> getAllUsers();
+
+    UserDto getUserById(Long id);
 
 }

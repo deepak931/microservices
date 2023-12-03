@@ -23,7 +23,7 @@ public class Booking extends BaseEntity {
 
     private LocalDate bookingDate;
 
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private User user;
 
     @OneToOne(cascade = CascadeType.ALL)

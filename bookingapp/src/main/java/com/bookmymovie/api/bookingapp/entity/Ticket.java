@@ -15,18 +15,18 @@ import java.util.Set;
 @NoArgsConstructor
 public class Ticket extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-  @GenericGenerator(name = "native")
-  private Long ticketId;
-  
-  private double price;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native")
+    private Long ticketId;
 
-  private LocalDate showDate;
+    private double price;
 
-  @OneToOne
-  private Shows shows;
+    private LocalDate showDate;
 
-  @OneToMany
-  private Set<Seat> seats;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private Shows shows;
+
+    @OneToMany
+    private Set<Seat> seats;
 }

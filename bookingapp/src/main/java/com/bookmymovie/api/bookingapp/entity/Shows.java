@@ -15,21 +15,21 @@ import java.util.Set;
 @NoArgsConstructor
 public class Shows extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-  @GenericGenerator(name = "native")
-  private Long showId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native")
+    private Long showId;
 
-  private LocalTime startTime;
+    private LocalTime startTime;
 
-  private LocalTime endTime;
+    private LocalTime endTime;
 
-  @OneToMany
-  private Set<Ticket> tickets;
+    @OneToMany
+    private Set<Ticket> tickets;
 
-  @ManyToOne
-  private Movie movie;
-
-  @ManyToOne
-  private Theatre theatre;
+    //  @ManyToOne
+    //  private Movie movie;
+    //
+    //  @ManyToOne
+    //  private Theatre theatre;
 }

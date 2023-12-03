@@ -22,7 +22,7 @@ public class Movie extends BaseEntity {
     private Long movieId;
 
     private String title;
-    
+
     private LocalDateTime releaseDate;
 
     private String director;
@@ -32,8 +32,11 @@ public class Movie extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Shows> shows;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<Theatre> theatres;
+    @OneToOne(fetch = FetchType.EAGER)
+    private Theatre theatres;
+
+    @ManyToOne
+    private City city;
 
     private boolean isRunning;
 

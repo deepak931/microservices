@@ -1,5 +1,6 @@
 package com.bookmymovie.api.bookingapp.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -10,17 +11,22 @@ import java.util.List;
 public class BookingRequestDto {
 
 
+    @NotEmpty
+    private Long movieID;
 
-  private Long movieID;
+    @NotEmpty
+    private Long theatreId;
 
-  private Long theatreId;
+    @NotEmpty
+    private Long showId;
 
-  private Long showId;
+    @NotEmpty
+    private Long userId;
 
-  private Long userId;
+    @NotEmpty
+    private List<Long> seatsId;
 
-  private List<Long> seatsId;
-
-  private LocalDate bookingDate;
+    @NotEmpty
+    private LocalDate bookingDate;
 
 }

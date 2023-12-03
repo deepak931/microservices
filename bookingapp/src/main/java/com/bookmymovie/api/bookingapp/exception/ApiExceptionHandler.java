@@ -14,30 +14,48 @@ import java.time.LocalDateTime;
 public class ApiExceptionHandler {
 
 
-  @ExceptionHandler(PartnerAlreadyExistsException.class)
-  public ResponseEntity<ErrorResponseDto> handlePartnerAlreadyExistsException(
-      PartnerAlreadyExistsException ex, WebRequest webRequest) {
-    ErrorResponseDto error =
-        new ErrorResponseDto(webRequest.getDescription(false), HttpStatus.BAD_REQUEST,
-            ex.getMessage(), LocalDateTime.now());
-    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-  }
+    @ExceptionHandler(PartnerAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseDto> handlePartnerAlreadyExistsException(
+            PartnerAlreadyExistsException ex, WebRequest webRequest) {
+        ErrorResponseDto error =
+                new ErrorResponseDto(webRequest.getDescription(false), HttpStatus.BAD_REQUEST,
+                        ex.getMessage(), LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 
-  @ExceptionHandler(ResourceNotFoundExcption.class)
-  public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(
-      ResourceNotFoundExcption ex, WebRequest webRequest) {
-    ErrorResponseDto error =
-        new ErrorResponseDto(webRequest.getDescription(false), HttpStatus.NOT_FOUND,
-            ex.getMessage(), LocalDateTime.now());
-    return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-  }
+    @ExceptionHandler(ResourceNotFoundExcption.class)
+    public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(
+            ResourceNotFoundExcption ex, WebRequest webRequest) {
+        ErrorResponseDto error =
+                new ErrorResponseDto(webRequest.getDescription(false), HttpStatus.NOT_FOUND,
+                        ex.getMessage(), LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
 
-  @ExceptionHandler(ShowsTimeOverlapException.class)
-  public ResponseEntity<ErrorResponseDto> handleShowsTimeOverlapException(
-      ShowsTimeOverlapException ex, WebRequest webRequest) {
-    ErrorResponseDto error =
-        new ErrorResponseDto(webRequest.getDescription(false), HttpStatus.BAD_REQUEST,
-            ex.getMessage(), LocalDateTime.now());
-    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-  }
+    @ExceptionHandler(ShowsTimeOverlapException.class)
+    public ResponseEntity<ErrorResponseDto> handleShowsTimeOverlapException(
+            ShowsTimeOverlapException ex, WebRequest webRequest) {
+        ErrorResponseDto error =
+                new ErrorResponseDto(webRequest.getDescription(false), HttpStatus.BAD_REQUEST,
+                        ex.getMessage(), LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseDto> handleUserAlreadyExistsException(
+            UserAlreadyExistsException ex, WebRequest webRequest) {
+        ErrorResponseDto error =
+                new ErrorResponseDto(webRequest.getDescription(false), HttpStatus.BAD_REQUEST,
+                        ex.getMessage(), LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SeatNotAvailableException.class)
+    public ResponseEntity<ErrorResponseDto> handleSeatNotAvailableException(
+            ResourceNotFoundExcption ex, WebRequest webRequest) {
+        ErrorResponseDto error =
+                new ErrorResponseDto(webRequest.getDescription(false), HttpStatus.BAD_REQUEST,
+                        ex.getMessage(), LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 }

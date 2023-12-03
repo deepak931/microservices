@@ -27,7 +27,7 @@ public class Partner extends BaseEntity {
 
     private String address;
 
-    @OneToOne
+    @ManyToOne
     private City city;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "partner")

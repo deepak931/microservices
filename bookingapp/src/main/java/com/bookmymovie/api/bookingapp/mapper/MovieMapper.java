@@ -7,6 +7,7 @@ import com.bookmymovie.api.bookingapp.dto.TheatreDto;
 import com.bookmymovie.api.bookingapp.entity.Movie;
 import com.bookmymovie.api.bookingapp.entity.Shows;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -46,14 +47,16 @@ public class MovieMapper {
         movieDto.setGenre(movie.getGenre());
         movieDto.setReleaseDate(movie.getReleaseDate());
         movieDto.setTitle(movie.getTitle());
+        movieDto.setMovieId(movie.getMovieId());
         Set<ShowsDto> shows =
                 movie.getShows().stream().map(e -> ShowsMapper.mapToShowsDto(e, new ShowsDto()))
                         .collect(Collectors.toSet());
         movieDto.setShows(shows);
-        Set<TheatreDto> theatreDtos =
-                movie.getTheatres().stream().map(e -> TheatreMapper.mapToTheatreDto(e, new TheatreDto(), true))
-                        .collect(Collectors.toSet());
-        movieDto.setTheatreDtos(theatreDtos);
+
+        Set<TheatreDto> theatreDtos = new HashSet<>();
+        TheatreDto theatreDto = TheatreMapper.mapToTheatreDto(movie.getTheatres(), new TheatreDto(), true, false);
+        theatreDtos.add(theatreDto);
+        movieDto.setTheatres(theatreDtos);
         return movieDto;
     }
 }
