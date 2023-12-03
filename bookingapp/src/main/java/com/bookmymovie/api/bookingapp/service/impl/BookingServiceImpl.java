@@ -5,6 +5,7 @@ import com.bookmymovie.api.bookingapp.dto.BookingRequestDto;
 import com.bookmymovie.api.bookingapp.dto.MovieBookingDto;
 import com.bookmymovie.api.bookingapp.entity.*;
 import com.bookmymovie.api.bookingapp.exception.ResourceNotFoundExcption;
+import com.bookmymovie.api.bookingapp.mapper.BookingMapper;
 import com.bookmymovie.api.bookingapp.repository.*;
 import com.bookmymovie.api.bookingapp.service.BookingService;
 import jakarta.transaction.Transactional;
@@ -75,7 +76,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void updateBooking(Long bookingId, Long seatReservationId, BookingStatus status) {
+    public Long updateBooking(Long bookingId, Long seatReservationId, BookingStatus status) {
         Booking booking = bookingRepository.findById(bookingId).
                 orElseThrow(() -> new ResourceNotFoundExcption("Booking", "bookingId", bookingId.toString()));
         SeatReservation seatReservation = seatReservationRepository.findById(seatReservationId).
@@ -114,6 +115,7 @@ public class BookingServiceImpl implements BookingService {
 
             //ticketRepository.save(ticket);
             seatReservationRepository.delete(seatReservation);
+            return ticket.getTicketId();
 
         } else {
             booking.setStatus(BookingStatus.FAILED);
@@ -121,13 +123,20 @@ public class BookingServiceImpl implements BookingService {
             bookingRepository.save(booking);
             seatReservationRepository.delete(seatReservation);
         }
-
+        return null;
     }
 
 
     @Override
     public List<BookingRequestDto> getAllBookings() {
         return null;
+    }
+
+    @Override
+    public MovieBookingDto getBooking(Long id) {
+        Booking booking = bookingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundExcption("Booking",
+                "bookingID", id.toString()));
+        return BookingMapper.mapToBookingDto(booking, new MovieBookingDto());
     }
 
     @Override
