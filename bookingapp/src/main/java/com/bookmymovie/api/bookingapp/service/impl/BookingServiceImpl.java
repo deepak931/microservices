@@ -113,7 +113,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Long updateBooking(Long bookingId, Long seatReservationId, BookingStatus status) {
         Booking booking = null;
-        Ticket ticket = new Ticket();
         try {
             booking = bookingRepository.findById(bookingId).
                     orElseThrow(() -> new ResourceNotFoundExcption("Booking", "bookingId", bookingId.toString()));
@@ -122,31 +121,17 @@ public class BookingServiceImpl implements BookingService {
 
             List<Long> seatIds =
                     Arrays.stream(seatReservation.getSeatIds().split(",")).map(Long::valueOf).toList();
-            //    List<Seat> seatBySeatIdn = seatRepository.findSeatBySeatIdIn(seatIds);
-            // Set<Seat> seats = new HashSet<>(seatBySeatIdn);
+
 
             if (status != BookingStatus.SUCCESS || !validateBooking(seatIds, seatReservation)) {
                 booking.setStatus(BookingStatus.FAILED);
                 bookingRepository.save(booking);
             }
 
-            //            ticket.setShows(seatReservation.getShows());
-            //            ticket.setSeats(seats);
-            //            ticket.setShowDate(seatReservation.getDate());
-
             booking.setStatus(BookingStatus.SUCCESS);
             booking.getTicket().setStatus(BookingStatus.SUCCESS);
-            //            Set<Booking> userBookings = new HashSet<>();
-            //            userBookings.add(booking);
-            //            booking.getUser().setBookings(userBookings);
-            //            booking.setTicket(ticket);
 
-            //            Set<Ticket> tickets = new HashSet<>();
-            //            tickets.add(ticket);
-            //            ticket.getShows().setTickets(tickets);
             bookingRepository.save(booking);
-            //            if (ticket.getTicketId() == null)
-            //                throw new BookingException("Error while creating Ticket");
 
         } catch (Exception ex) {
             if (booking != null) {
