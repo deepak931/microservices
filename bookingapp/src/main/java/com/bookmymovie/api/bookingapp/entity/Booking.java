@@ -29,6 +29,10 @@ public class Booking extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL)
     private Ticket ticket;
 
+    @Enumerated(EnumType.STRING)
     private BookingStatus status;
+
+    @OneToOne
+    private Payment payment;
 
 }

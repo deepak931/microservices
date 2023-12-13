@@ -33,5 +33,7 @@ public class MovieRequestDto {
     @NotEmpty
     private Boolean isRunning;
 
+    private Set<PriceDto> price;
+
 
 }

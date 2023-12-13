@@ -1,9 +1,7 @@
 package com.bookmymovie.api.bookingapp.mapper;
 
-import com.bookmymovie.api.bookingapp.dto.MovieShowDto;
-import com.bookmymovie.api.bookingapp.dto.MovieShowInfoDto;
-import com.bookmymovie.api.bookingapp.dto.MovieTheatreDto;
-import com.bookmymovie.api.bookingapp.dto.SeatDto;
+import com.bookmymovie.api.bookingapp.constants.BookingStatus;
+import com.bookmymovie.api.bookingapp.dto.*;
 import com.bookmymovie.api.bookingapp.entity.*;
 
 import java.time.LocalDate;
@@ -22,6 +20,10 @@ public class MovieShowInfoMapper {
         movieShowInfoDto.setGenre(movie.getGenre());
         movieShowInfoDto.setMovieTitle(movie.getTitle());
         movieShowInfoDto.setDirector(movie.getDirector());
+
+        List<PriceDto> prices = movie.getPrice().stream().map(e -> PriceMapper.mapToPriceDto(e, new PriceDto()))
+                .toList();
+        movieShowInfoDto.setPrices(prices);
 
         List<Shows> shows = new ArrayList<>(movie.getShows());
         MovieTheatreDto theatreDto = createTheatre(movie.getTheatres(), shows, date, reservedSeats);
@@ -76,7 +78,8 @@ public class MovieShowInfoMapper {
 
         List<SeatDto> totalSeats =
                 new ArrayList<>(theatre.getSeats().stream().map(e -> SeatMapper.mapToSeatDto(e, new SeatDto())).toList());
-        List<Long> bookedSeats = shows.getTickets().stream().filter(e -> e.getShowDate().equals(date))
+        List<Long> bookedSeats = shows.getTickets().stream().filter(e -> BookingStatus.SUCCESS.equals(e.getStatus())).
+                filter(e -> e.getShowDate().equals(date))
                 .flatMap(e -> e.getSeats().stream()).map(Seat::getSeatId).toList();
 
 

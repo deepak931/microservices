@@ -4,10 +4,12 @@ import com.bookmymovie.api.bookingapp.constants.BookingStatus;
 import com.bookmymovie.api.bookingapp.dto.BookingRequestDto;
 import com.bookmymovie.api.bookingapp.dto.MovieBookingDto;
 import com.bookmymovie.api.bookingapp.entity.*;
+import com.bookmymovie.api.bookingapp.exception.BookingException;
 import com.bookmymovie.api.bookingapp.exception.ResourceNotFoundExcption;
 import com.bookmymovie.api.bookingapp.mapper.BookingMapper;
 import com.bookmymovie.api.bookingapp.repository.*;
 import com.bookmymovie.api.bookingapp.service.BookingService;
+import com.bookmymovie.api.bookingapp.service.SeatReservationService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.cloud.stream.function.StreamBridge;
@@ -28,37 +30,46 @@ public class BookingServiceImpl implements BookingService {
 
     private SeatReservationRepository seatReservationRepository;
 
-    private TheatreRepository theatreRepository;
-
     private UserRepository userRepository;
 
     private SeatRepository seatRepository;
+    private MovieRepository movieRepository;
 
     private TicketRepository ticketRepository;
 
     private StreamBridge streamBridge;
 
+    private SeatReservationService seatReservationService;
+
 
     @Override
-
+    @Transactional
     public SeatReservation createBooking(BookingRequestDto bookingDto) {
 
-        Theatre theatre = theatreRepository.findById(bookingDto.getTheatreId()).get();
+        Movie movie = movieRepository.findById(bookingDto.getMovieID()).orElseThrow(() -> new ResourceNotFoundExcption(
+                "Movie",
+                "movieID", bookingDto.getMovieID().toString()));
 
-        Movie movie = theatre.getMovie();
+        Theatre theatre = movie.getTheatres();
 
-        User user = userRepository.findById(bookingDto.getUserId()).get();
+        User user = userRepository.findById(bookingDto.getUserId()).orElseThrow(() -> new ResourceNotFoundExcption(
+                "User",
+                "userID", bookingDto.getUserId().toString()));
 
         Shows shows =
                 movie.getShows().stream().filter(e -> e.getShowId() == bookingDto.getShowId()).findFirst()
-                        .get();
+                        .orElseThrow(() -> new ResourceNotFoundExcption(
+                                "Show",
+                                "ShowID", bookingDto.getShowId().toString()));
+
+        //create Booking
         Booking booking = new Booking();
         booking.setBookingDate(bookingDto.getBookingDate());
         booking.setUser(user);
         booking.setStatus(BookingStatus.PENDING);
 
-        booking = bookingRepository.save(booking);
 
+        //create SeatReservation
         SeatReservation seatReservation = new SeatReservation();
         seatReservation.setBooking(booking);
         seatReservation.setUser(user);
@@ -70,62 +81,94 @@ public class BookingServiceImpl implements BookingService {
         seatReservation.setTheatre(theatre);
         seatReservation.setShows(shows);
 
-        seatReservationRepository.save(seatReservation);
+        //create Ticket
+        Ticket ticket = new Ticket();
+        ticket.setStatus(BookingStatus.PENDING);
+        List<Seat> seatBySeatIdn = seatRepository.findSeatBySeatIdIn(bookingDto.getSeatsId());
+        Set<Seat> seats = new HashSet<>(seatBySeatIdn);
+        ticket.setShows(seatReservation.getShows());
+        ticket.setSeats(seats);
+        ticket.setShowDate(seatReservation.getDate());
+        ticket.setMovie(movie);
+        Set<Ticket> tickets = new HashSet<>();
+        tickets.add(ticket);
+        ticket.getShows().setTickets(tickets);
+
+        booking.setTicket(ticket);
+        Set<Booking> userBookings = new HashSet<>();
+        userBookings.add(booking);
+        booking.getUser().setBookings(userBookings);
+        booking = bookingRepository.save(booking);
+        if (booking.getBookingId() == null)
+            throw new BookingException("Error while creating booking");
+
+        seatReservation = seatReservationRepository.save(seatReservation);
+
+        if (seatReservation.getReservationId() == null)
+            throw new BookingException("Error while reserving seats");
         return seatReservation;
 
     }
 
     @Override
     public Long updateBooking(Long bookingId, Long seatReservationId, BookingStatus status) {
-        Booking booking = bookingRepository.findById(bookingId).
-                orElseThrow(() -> new ResourceNotFoundExcption("Booking", "bookingId", bookingId.toString()));
-        SeatReservation seatReservation = seatReservationRepository.findById(seatReservationId).
-                orElseThrow(() -> new ResourceNotFoundExcption("SeatReservation", "seatReservationId", seatReservationId.toString()));
+        Booking booking = null;
+        Ticket ticket = new Ticket();
+        try {
+            booking = bookingRepository.findById(bookingId).
+                    orElseThrow(() -> new ResourceNotFoundExcption("Booking", "bookingId", bookingId.toString()));
+            SeatReservation seatReservation = seatReservationRepository.findById(seatReservationId).
+                    orElseThrow(() -> new ResourceNotFoundExcption("SeatReservation", "seatReservationId", seatReservationId.toString()));
 
-        List<Long> seatIds =
-                Arrays.stream(seatReservation.getSeatIds().split(",")).map(Long::valueOf).toList();
+            List<Long> seatIds =
+                    Arrays.stream(seatReservation.getSeatIds().split(",")).map(Long::valueOf).toList();
+            //    List<Seat> seatBySeatIdn = seatRepository.findSeatBySeatIdIn(seatIds);
+            // Set<Seat> seats = new HashSet<>(seatBySeatIdn);
 
-        if (status == BookingStatus.SUCCESS) {
-            Ticket ticket = new Ticket();
-            List<Seat> seatBySeatIdn = seatRepository.findSeatBySeatIdIn(seatIds);
-            Set<Seat> seats = new HashSet<>(seatBySeatIdn);
+            if (status != BookingStatus.SUCCESS || !validateBooking(seatIds, seatReservation)) {
+                booking.setStatus(BookingStatus.FAILED);
+                bookingRepository.save(booking);
+            }
 
-            //            List<Set<Seat>> seatInQuery = new ArrayList<>();
-            //            seatInQuery.add(seats);
-            //            List<Ticket> bookedTickets = ticketRepository.findTicketBySeatsInAndShowDateAndShows(seatInQuery, seatReservation.getDate(),
-            //                    seatReservation.getShows());
-            //            if (!bookedTickets.isEmpty()) {
-            //                String seatIdsString = seatIds.stream().map(Object::toString).collect(Collectors.joining(","));
-            //                throw new SeatNotAvailableException("Selected seats are not available:" + seatIdsString);
-            //            }
-            ticket.setShows(seatReservation.getShows());
-            ticket.setSeats(seats);
-            ticket.setShowDate(seatReservation.getDate());
+            //            ticket.setShows(seatReservation.getShows());
+            //            ticket.setSeats(seats);
+            //            ticket.setShowDate(seatReservation.getDate());
 
             booking.setStatus(BookingStatus.SUCCESS);
-            Set<Booking> userBookings = new HashSet<>();
-            userBookings.add(booking);
-            booking.getUser().setBookings(userBookings);
-            booking.setTicket(ticket);
+            booking.getTicket().setStatus(BookingStatus.SUCCESS);
+            //            Set<Booking> userBookings = new HashSet<>();
+            //            userBookings.add(booking);
+            //            booking.getUser().setBookings(userBookings);
+            //            booking.setTicket(ticket);
 
-            Set<Ticket> tickets = new HashSet<>();
-            tickets.add(ticket);
-            ticket.getShows().setTickets(tickets);
+            //            Set<Ticket> tickets = new HashSet<>();
+            //            tickets.add(ticket);
+            //            ticket.getShows().setTickets(tickets);
             bookingRepository.save(booking);
+            //            if (ticket.getTicketId() == null)
+            //                throw new BookingException("Error while creating Ticket");
 
-            //ticketRepository.save(ticket);
-            seatReservationRepository.delete(seatReservation);
-            return ticket.getTicketId();
+        } catch (Exception ex) {
+            if (booking != null) {
+                booking.setStatus(BookingStatus.FAILED);
+                bookingRepository.save(booking);
+            }
+            throw ex;
 
-        } else {
-            booking.setStatus(BookingStatus.FAILED);
-
-            bookingRepository.save(booking);
-            seatReservationRepository.delete(seatReservation);
+        } finally {
+            seatReservationService.deleteSeatReservation(seatReservationId);
         }
-        return null;
+
+
+        return booking.getTicket().getTicketId();
     }
 
+    private boolean validateBooking(List<Long> seatIds, SeatReservation seatReservation) {
+        List<Ticket> bookedTickets = ticketRepository.
+                findByShowsAndShowDateAndSeatsSeatIdIn(seatReservation.getShows(),
+                        seatReservation.getDate(), seatIds);
+        return bookedTickets.stream().anyMatch(e -> BookingStatus.SUCCESS.equals(e.getStatus()));
+    }
 
     @Override
     public List<BookingRequestDto> getAllBookings() {

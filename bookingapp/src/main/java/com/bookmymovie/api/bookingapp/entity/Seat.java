@@ -1,9 +1,7 @@
 package com.bookmymovie.api.bookingapp.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.bookmymovie.api.bookingapp.constants.SeatType;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -16,14 +14,15 @@ import org.hibernate.annotations.GenericGenerator;
 public class Seat extends BaseEntity {
 
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-  @GenericGenerator(name = "native")
-  private Long seatId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native")
+    private Long seatId;
 
-  private String seatNo;
+    private String seatNo;
 
-  private Integer type;
+    @Enumerated(EnumType.STRING)
+    private SeatType type;
 
 
 }

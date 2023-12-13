@@ -36,8 +36,11 @@ public class Theatre extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Seat> seats;
 
-    @OneToOne
-    private Movie movie;
+    @OneToMany
+    private Set<Movie> movies;
+
+    @OneToMany
+    private Set<Price> prices;
 
 
     private String zipCode;

@@ -12,14 +12,14 @@ import java.time.LocalDate;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class SeatReservation {
+public class SeatReservation extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native")
     private Long reservationId;
 
-    @OneToOne
+    @ManyToOne
     private User user;
 
     @ManyToOne

@@ -4,13 +4,11 @@ import com.bookmymovie.api.bookingapp.dto.MovieBookingDto;
 import com.bookmymovie.api.bookingapp.dto.MovieDto;
 import com.bookmymovie.api.bookingapp.dto.MovieRequestDto;
 import com.bookmymovie.api.bookingapp.dto.MovieShowInfoDto;
-import com.bookmymovie.api.bookingapp.entity.Movie;
-import com.bookmymovie.api.bookingapp.entity.SeatReservation;
-import com.bookmymovie.api.bookingapp.entity.Shows;
-import com.bookmymovie.api.bookingapp.entity.Theatre;
+import com.bookmymovie.api.bookingapp.entity.*;
 import com.bookmymovie.api.bookingapp.exception.ResourceNotFoundExcption;
 import com.bookmymovie.api.bookingapp.mapper.MovieMapper;
 import com.bookmymovie.api.bookingapp.mapper.MovieShowInfoMapper;
+import com.bookmymovie.api.bookingapp.mapper.PriceMapper;
 import com.bookmymovie.api.bookingapp.mapper.ShowsMapper;
 import com.bookmymovie.api.bookingapp.repository.MovieRepository;
 import com.bookmymovie.api.bookingapp.repository.SeatReservationRepository;
@@ -22,6 +20,7 @@ import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,10 +52,16 @@ public class MovieServiceImpl implements MovieService {
         Set<Shows> shows = movieDto.getShows().stream().map(e -> ShowsMapper.mapToShows(e, new Shows()))
                 .collect(Collectors.toSet());
 
+        Set<Price> prices = movieDto.getPrice().stream().map(e -> PriceMapper.mapToPrice(e, new Price()))
+                .collect(Collectors.toSet());
+
         movie.setTheatres(theatre);
         movie.setShows(shows);
         movie.setCity(theatre.getCity());
-        theatre.setMovie(movie);
+        movie.setPrice(prices);
+        Set<Movie> movies = new HashSet<>();
+        movies.add(movie);
+        theatre.setMovies(movies);
         return movieRepository.save(movie).getMovieId();
 
 
@@ -80,7 +85,6 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<MovieShowInfoDto> getMoviesByNameAndCity(String name, String city, LocalDate date) {
         List<Movie> movies = movieRepository.findMoviesByTitleContainingAndCityName(name, city);
-        Set<Long> movieIds = movies.stream().map(Movie::getMovieId).collect(Collectors.toSet());
         List<SeatReservation> sr =
                 seatReservationRepository.findSeatReservationByDateAndMovieIn(date, movies);
 

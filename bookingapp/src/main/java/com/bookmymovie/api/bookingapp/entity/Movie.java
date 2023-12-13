@@ -32,11 +32,14 @@ public class Movie extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Shows> shows;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Theatre theatres;
 
     @ManyToOne
     private City city;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Price> price;
 
     private boolean isRunning;
 

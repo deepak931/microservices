@@ -32,7 +32,7 @@ public class BookingMessage {
         RestTemplate restTemplate = new RestTemplate();
         TicketRequestDto ticketRequestDto = new TicketRequestDto();
         ticketRequestDto.setBookingId(movieBookingDto.getBookingId());
-        ticketRequestDto.setSeatReservationId(movieBookingDto.getBookingId());
+        ticketRequestDto.setSeatReservationId(movieBookingDto.getSeatReservationId());
         ticketRequestDto.setStatus(BookingStatus.SUCCESS);
         ResponseEntity<String> response = restTemplate.postForEntity(bookingTicketUrl, ticketRequestDto, String.class);
         logger.info(response.getBody());

@@ -1,7 +1,7 @@
 package com.bookmymovie.api.bookingapp.controller;
 
-import com.bookmymovie.api.bookingapp.constants.BookingAppConstants;
 import com.bookmymovie.api.bookingapp.dto.*;
+import com.bookmymovie.api.bookingapp.exception.CreateMovieException;
 import com.bookmymovie.api.bookingapp.exception.ShowsTimeOverlapException;
 import com.bookmymovie.api.bookingapp.service.MovieService;
 import org.springframework.http.HttpStatus;
@@ -34,18 +34,15 @@ public class MovieControllerApi {
         if (!validateShows(movieDto.getShows())) {
             throw new ShowsTimeOverlapException("Start and end time of two shows overlaps");
         }
+        if (!validateMovieShowsAndPrice(movieDto)) {
+            throw new CreateMovieException("Running status of movie is TRUE. Please provide shows and price detail " +
+                    "also");
+        }
         Long id = movieService.creatMovie(movieDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseDto(HttpStatus.CREATED.name(), messageCreated("Partner", id.toString())));
     }
 
-    @PostMapping("/rabbit")
-    public ResponseEntity<ResponseDto> createMovie(@RequestBody MovieBookingDto movieDto) {
-        movieService.test(movieDto);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseDto(HttpStatus.CREATED.name(), BookingAppConstants.MESSAGE_201));
-
-    }
 
     @GetMapping("/movies")
     public ResponseEntity<List<MovieDto>> getAllMovies() {
@@ -65,6 +62,10 @@ public class MovieControllerApi {
                                                            LocalDate date) {
         List<MovieShowInfoDto> movieDtos = movieService.getMoviesByNameAndCity(name, city, date);
         return ResponseEntity.status(HttpStatus.OK).body(movieDtos);
+    }
+
+    private boolean validateMovieShowsAndPrice(MovieRequestDto movieDto) {
+        return !movieDto.getIsRunning() || (!movieDto.getPrice().isEmpty() && !movieDto.getShows().isEmpty());
     }
 
     private boolean validateShows(Set<ShowsDto> shows) {

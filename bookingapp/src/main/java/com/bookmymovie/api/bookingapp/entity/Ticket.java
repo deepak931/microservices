@@ -1,5 +1,6 @@
 package com.bookmymovie.api.bookingapp.entity;
 
+import com.bookmymovie.api.bookingapp.constants.BookingStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -20,13 +21,17 @@ public class Ticket extends BaseEntity {
     @GenericGenerator(name = "native")
     private Long ticketId;
 
-    private double price;
-
     private LocalDate showDate;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     private Shows shows;
 
+    @ManyToOne
+    private Movie movie;
+
     @OneToMany
     private Set<Seat> seats;
+
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status;
 }
