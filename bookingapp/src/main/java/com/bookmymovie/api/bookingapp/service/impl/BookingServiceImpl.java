@@ -15,10 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,7 +54,7 @@ public class BookingServiceImpl implements BookingService {
                 "userID", bookingDto.getUserId().toString()));
 
         Shows shows =
-                movie.getShows().stream().filter(e -> e.getShowId() == bookingDto.getShowId()).findFirst()
+                movie.getShows().stream().filter(e -> Objects.equals(e.getShowId(), bookingDto.getShowId())).findFirst()
                         .orElseThrow(() -> new ResourceNotFoundExcption(
                                 "Show",
                                 "ShowID", bookingDto.getShowId().toString()));
