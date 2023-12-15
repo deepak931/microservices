@@ -40,7 +40,7 @@ public class MovieControllerApi {
         }
         Long id = movieService.creatMovie(movieDto);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseDto(HttpStatus.CREATED.name(), messageCreated("Partner", id.toString())));
+                .body(new ResponseDto(HttpStatus.CREATED.name(), messageCreated("Movie", id.toString())));
     }
 
 
@@ -65,7 +65,7 @@ public class MovieControllerApi {
     }
 
     private boolean validateMovieShowsAndPrice(MovieRequestDto movieDto) {
-        return !movieDto.getIsRunning() || (!movieDto.getPrice().isEmpty() && !movieDto.getShows().isEmpty());
+        return !movieDto.getIsRunning() || ((movieDto.getPrice() != null && !movieDto.getPrice().isEmpty()) && (movieDto.getShows() != null && !movieDto.getShows().isEmpty()));
     }
 
     private boolean validateShows(Set<ShowsDto> shows) {

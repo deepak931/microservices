@@ -58,4 +58,13 @@ public class ApiExceptionHandler {
                         ex.getMessage(), LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(CreateMovieException.class)
+    public ResponseEntity<ErrorResponseDto> handleCreateMovieException(
+            CreateMovieException ex, WebRequest webRequest) {
+        ErrorResponseDto error =
+                new ErrorResponseDto(webRequest.getDescription(false), HttpStatus.BAD_REQUEST,
+                        ex.getMessage(), LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 }
